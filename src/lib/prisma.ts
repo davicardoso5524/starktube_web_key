@@ -4,11 +4,19 @@ import { createClient } from '@libsql/client';
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-const url = process.env.TURSO_DATABASE_URL || 'file:./dev.db';
+let dbUrl = process.env.TURSO_DATABASE_URL;
+if (!dbUrl || dbUrl === 'undefined' || dbUrl === 'null' || dbUrl.trim() === '') {
+  dbUrl = process.env.DATABASE_URL || 'file:./dev.db';
+}
+
+let dbAuthToken = process.env.TURSO_AUTH_TOKEN;
+if (dbAuthToken === 'undefined' || dbAuthToken === 'null') {
+  dbAuthToken = undefined;
+}
 
 const libsql = createClient({
-  url,
-  authToken: process.env.TURSO_AUTH_TOKEN,
+  url: dbUrl,
+  authToken: dbAuthToken,
 });
 
 const adapter = new PrismaLibSql(libsql);
