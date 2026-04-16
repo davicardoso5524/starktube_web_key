@@ -9,7 +9,7 @@ datasource db {
   model License {
   id          String   @id @default(uuid())
   machineCode String
-  product     String   @default("yt-download")
+  product     String   @default("stark-tube")
   version     Int      @default(1)
   iat         Int
   exp         Int
