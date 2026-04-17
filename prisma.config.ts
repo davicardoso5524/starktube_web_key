@@ -9,6 +9,12 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env.TURSO_DATABASE_URL || process.env.DATABASE_URL || "file:./dev.db",
+    url: (function() {
+      const urls = [process.env.TURSO_DATABASE_URL, process.env.DATABASE_URL];
+      for (const url of urls) {
+        if (url && url !== 'undefined' && url !== 'null' && url.trim() !== '') return url;
+      }
+      return "file:./dev.db";
+    })(),
   },
 });
