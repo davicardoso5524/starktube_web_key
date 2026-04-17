@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaLibSql } from '@prisma/adapter-libsql';
-import { createClient } from '@libsql/client';
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
@@ -29,12 +28,10 @@ if (process.env.NODE_ENV === 'production') {
   console.log(`[Database] Connecting with protocol: ${dbUrl.split(':')[0]}`);
 }
 
-const libsql = createClient({
+const adapter = new PrismaLibSql({
   url: dbUrl,
   authToken: dbAuthToken,
 });
-
-const adapter = new PrismaLibSql(libsql);
 
 export const prisma =
   globalForPrisma.prisma ||
